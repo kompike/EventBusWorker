@@ -22,23 +22,9 @@ require(['eventbus'], function(EventBus){
 		console.log(currentEvent + " from f2()");
 	}
 	
-	function worker(subscriber) {
-		
-		var blob = new Blob(["onmessage = function(e){(" + subscriber.toString() + ")(e.data)};"], {type: 'application/javascript'});
-		var URL = window.URL.createObjectURL(blob);
-		
-		return new Worker(URL);
-	}
-	
-	eventBus.subscribe("first", function(currentEvent) {
-									worker(firstSubscriberFunction)
-										.postMessage(currentEvent);
-								});
+	eventBus.subscribe("first", firstSubscriberFunction);
 
-	eventBus.subscribe("second", function(currentEvent) {
-									worker(secondSubscriberFunction)
-										.postMessage(currentEvent);
-								});
+	eventBus.subscribe("second", secondSubscriberFunction);
 			
 	for (var i = 0; i < 5; i++) {
 		eventBus.post("first", "someData #" + i);

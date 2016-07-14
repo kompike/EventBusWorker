@@ -20,7 +20,11 @@ var EventBus = function(){
 					
 						var currentCallback = eventTypeSubscribers[callbackIndex];
 						
-						currentCallback(someEvent);
+						var worker = new Worker(window.URL.createObjectURL(
+								new Blob(["onmessage = function(e) {(" + currentCallback.toString() + ")(e.data)};"]))
+						);
+						
+						worker.postMessage(someEvent);
 						
 					}, 0);
 					
